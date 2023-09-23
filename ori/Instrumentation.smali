@@ -611,8 +611,7 @@
 .end method
 
 .method public static whitelist newApplication(Ljava/lang/Class;Landroid/content/Context;)Landroid/app/Application;
-    .registers 3
-    .param p1, "context"  # Landroid/content/Context;
+    .registers 2
     .annotation system Ldalvik/annotation/Signature;
         value = {
             "(",
@@ -632,20 +631,29 @@
         }
     .end annotation
 
-    .line 1261
-    .local p0, "clazz":Ljava/lang/Class;, "Ljava/lang/Class<*>;"
+    .line 1266
     invoke-virtual {p0}, Ljava/lang/Class;->newInstance()Ljava/lang/Object;
 
-    move-result-object v0
+    move-result-object p0
 
-    check-cast v0, Landroid/app/Application;
+    check-cast p0, Landroid/app/Application;
 
-    .line 1262
-    .local v0, "app":Landroid/app/Application;
-    invoke-virtual {v0, p1}, Landroid/app/Application;->attach(Landroid/content/Context;)V
+    .line 1267
+    invoke-virtual {p0, p1}, Landroid/app/Application;->attach(Landroid/content/Context;)V
 
-    .line 1263
-    return-object v0
+    .line 1268
+    invoke-static {p0}, Lcom/android/internal/util/slim/AttestationHooks;->initApplicationBeforeOnCreate(Landroid/app/Application;)V
+
+    .line 1269
+    invoke-virtual {p1}, Landroid/content/Context;->getPackageName()Ljava/lang/String;
+
+    move-result-object p1
+
+    .line 1270
+    invoke-static {p1}, Lcom/android/internal/util/slim/PixelPropsUtils;->setProps(Ljava/lang/String;)V
+
+    .line 1271
+    return-object p0
 .end method
 
 .method private blacklist notifyStartActivityResult(ILandroid/os/Bundle;)V
@@ -4497,9 +4505,6 @@
 
 .method public whitelist newApplication(Ljava/lang/ClassLoader;Ljava/lang/String;Landroid/content/Context;)Landroid/app/Application;
     .registers 5
-    .param p1, "cl"  # Ljava/lang/ClassLoader;
-    .param p2, "className"  # Ljava/lang/String;
-    .param p3, "context"  # Landroid/content/Context;
     .annotation system Ldalvik/annotation/Throws;
         value = {
             Ljava/lang/InstantiationException;,
@@ -4508,7 +4513,7 @@
         }
     .end annotation
 
-    .line 1243
+    .line 1245
     invoke-virtual {p3}, Landroid/content/Context;->getPackageName()Ljava/lang/String;
 
     move-result-object v0
@@ -4517,17 +4522,27 @@
 
     move-result-object v0
 
-    .line 1244
+    .line 1246
     invoke-virtual {v0, p1, p2}, Landroid/app/AppComponentFactory;->instantiateApplication(Ljava/lang/ClassLoader;Ljava/lang/String;)Landroid/app/Application;
 
-    move-result-object v0
+    move-result-object p1
 
-    .line 1245
-    .local v0, "app":Landroid/app/Application;
-    invoke-virtual {v0, p3}, Landroid/app/Application;->attach(Landroid/content/Context;)V
+    .line 1247
+    invoke-virtual {p1, p3}, Landroid/app/Application;->attach(Landroid/content/Context;)V
 
-    .line 1246
-    return-object v0
+    .line 1248
+    invoke-static {p1}, Lcom/android/internal/util/slim/AttestationHooks;->initApplicationBeforeOnCreate(Landroid/app/Application;)V
+
+    .line 1249
+    invoke-virtual {p3}, Landroid/content/Context;->getPackageName()Ljava/lang/String;
+
+    move-result-object p2
+
+    .line 1250
+    invoke-static {p2}, Lcom/android/internal/util/slim/PixelPropsUtils;->setProps(Ljava/lang/String;)V
+
+    .line 1251
+    return-object p1
 .end method
 
 .method public whitelist onCreate(Landroid/os/Bundle;)V
